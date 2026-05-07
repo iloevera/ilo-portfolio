@@ -10,9 +10,32 @@ const progressBar = document.querySelector("#nav-progress");
 const sectionStatus = document.querySelector("#section-status");
 const dialog = document.querySelector("#project-dialog");
 const dialogClose = document.querySelector("#dialog-close");
+const heroHeadline = document.querySelector("#hero-headline");
+const atAGlanceCard = document.querySelector("#at-a-glance-card");
+const bottomNav = document.querySelector("#bottom-nav");
+const homeSection = document.querySelector("#home");
+const rootStyle = document.documentElement.style;
 
 let activeSection = "home";
 let lastFocusedTrigger = null;
+let targetSectionIndex = 0;
+let wheelAccumulator = 0;
+let rulingRaf = null;
+const WHEEL_STEP_THRESHOLD = 80;
+
+function clampIndex(index) {
+  return Math.max(0, Math.min(index, sections.length - 1));
+}
+
+function stepToSection(direction) {
+  const next = clampIndex(targetSectionIndex + direction);
+  if (next === targetSectionIndex) {
+    return;
+  }
+
+  targetSectionIndex = next;
+  scrollToSection(sections[targetSectionIndex]);
+}
 
 function renderProjects() {
   projectsGrid.innerHTML = projects
@@ -93,6 +116,9 @@ function updateProgress() {
 function setActiveSection(sectionId) {
   activeSection = sectionId;
   const activeIndex = sections.indexOf(sectionId);
+  if (activeIndex >= 0) {
+    targetSectionIndex = activeIndex;
+  }
   const displayIndex = activeIndex >= 0 ? activeIndex + 1 : 1;
   sectionStatus.textContent = `${String(displayIndex).padStart(2, "0")} / ${String(sections.length).padStart(2, "0")}`;
 
@@ -107,6 +133,78 @@ function setActiveSection(sectionId) {
   });
 }
 
+function setRuleVariable(name, value) {
+  rootStyle.setProperty(name, value);
+}
+
+function scheduleRulingGuides() {
+  if (rulingRaf !== null) {
+    return;
+  }
+
+  rulingRaf = requestAnimationFrame(() => {
+    updateRulingGuides();
+    rulingRaf = null;
+  });
+}
+
+function updateRulingGuides() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const homeStyles = homeSection ? window.getComputedStyle(homeSection) : null;
+  const sectionPadding = homeStyles ? Number.parseFloat(homeStyles.paddingLeft) || 24 : 24;
+  const maxContentWidth = 1280;
+  const containerWidth = Math.min(maxContentWidth, Math.max(320, viewportWidth - sectionPadding * 2));
+  const containerLeft = Math.max(12, (viewportWidth - containerWidth) / 2);
+
+  let contentStartX = containerLeft;
+  let contentEndX = containerLeft + containerWidth;
+  let editorialX = containerLeft + containerWidth * 0.65;
+  let glanceTopY = Math.max(20, viewportHeight * 0.3);
+
+  if (heroHeadline) {
+    const heroRect = heroHeadline.getBoundingClientRect();
+    if (heroRect.left > 0 && heroRect.left < viewportWidth) {
+      contentStartX = heroRect.left;
+    }
+  }
+
+  if (atAGlanceCard) {
+    const cardRect = atAGlanceCard.getBoundingClientRect();
+    if (cardRect.left > -80 && cardRect.left < viewportWidth + 80) {
+      editorialX = cardRect.left - 18;
+    }
+    if (cardRect.right > 0 && cardRect.right < viewportWidth + 80) {
+      contentEndX = Math.min(viewportWidth - 12, cardRect.right + 18);
+    }
+    glanceTopY = Math.max(16, cardRect.top - 12);
+  }
+
+  let frameTopY = viewportWidth <= 767 ? 16 : 40;
+  if (homeSection) {
+    const homeRect = homeSection.getBoundingClientRect();
+    if (homeRect.top > -viewportHeight && homeRect.top < viewportHeight) {
+      frameTopY = homeRect.top + (viewportWidth <= 767 ? 16 : 40);
+    }
+  }
+
+  let navTopY = viewportHeight - 120;
+  if (bottomNav) {
+    navTopY = bottomNav.getBoundingClientRect().top;
+  }
+
+  setRuleVariable("--rule-x-content-start", `${Math.round(contentStartX)}px`);
+  setRuleVariable("--rule-x-content-end", `${Math.round(contentEndX)}px`);
+  setRuleVariable("--rule-x-editorial", `${Math.round(editorialX)}px`);
+  setRuleVariable("--rule-y-frame-top", `${Math.round(frameTopY)}px`);
+  setRuleVariable("--rule-y-glance-top", `${Math.round(glanceTopY)}px`);
+  setRuleVariable("--rule-y-nav-top", `${Math.round(navTopY)}px`);
+
+  if (viewportWidth <= 767) {
+    setRuleVariable("--rule-x-content-end", "-100vw");
+  }
+}
+
 function registerNavigation() {
   [...navLinks, ...jumpLinks].forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -116,7 +214,10 @@ function registerNavigation() {
       }
 
       event.preventDefault();
+      wheelAccumulator = 0;
+      targetSectionIndex = clampIndex(sections.indexOf(targetId));
       scrollToSection(targetId);
+      scheduleRulingGuides();
     });
   });
 }
@@ -162,64 +263,89 @@ function registerDialog() {
 }
 
 function registerScroller() {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visibleEntry = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
+  let scrollRaf = null;
 
-      if (visibleEntry?.target?.id) {
-        setActiveSection(visibleEntry.target.id);
-      }
-    },
-    {
-      root: scroller,
-      threshold: [0.35, 0.55, 0.75]
+  function syncActiveSectionFromScroll() {
+    if (scrollRaf !== null) {
+      return;
     }
-  );
 
-  document.querySelectorAll(".section-panel").forEach((section) => observer.observe(section));
+    scrollRaf = requestAnimationFrame(() => {
+      const viewportWidth = scroller.clientWidth || 1;
+      const nextIndex = clampIndex(Math.round(scroller.scrollLeft / viewportWidth));
+      const nextSection = sections[nextIndex];
+
+      if (nextSection && nextSection !== activeSection) {
+        setActiveSection(nextSection);
+      } else {
+        targetSectionIndex = nextIndex;
+      }
+
+      scrollRaf = null;
+    });
+  }
 
   scroller.addEventListener(
     "wheel",
     (event) => {
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+      const axisDelta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+      if (Math.abs(axisDelta) < 1) {
         return;
       }
 
-      scroller.scrollBy({
-        left: event.deltaY,
-        behavior: "auto"
-      });
       event.preventDefault();
+      wheelAccumulator += axisDelta;
+
+      if (Math.abs(wheelAccumulator) >= WHEEL_STEP_THRESHOLD) {
+        const direction = Math.sign(wheelAccumulator);
+        wheelAccumulator = 0;
+        stepToSection(direction);
+      }
     },
     { passive: false }
   );
 
-  scroller.addEventListener("scroll", updateProgress, { passive: true });
+  const PARALLAX_FACTOR = 0.25;
+  scroller.addEventListener(
+    "scroll",
+    () => {
+      updateProgress();
+      syncActiveSectionFromScroll();
+      const offsetX = -(scroller.scrollLeft * PARALLAX_FACTOR);
+      document.documentElement.style.setProperty("--grid-parallax-x", `${offsetX}px`);
+      scheduleRulingGuides();
+    },
+    { passive: true }
+  );
 
   scroller.addEventListener("keydown", (event) => {
     if (dialog.open) {
       return;
     }
 
-    const index = sections.indexOf(activeSection);
     if (event.key === "ArrowRight" || event.key === "PageDown") {
-      const nextSection = sections[Math.min(index + 1, sections.length - 1)];
-      if (nextSection) {
-        event.preventDefault();
-        scrollToSection(nextSection);
-      }
+      event.preventDefault();
+      stepToSection(1);
     }
 
     if (event.key === "ArrowLeft" || event.key === "PageUp") {
-      const previousSection = sections[Math.max(index - 1, 0)];
-      if (previousSection) {
-        event.preventDefault();
-        scrollToSection(previousSection);
-      }
+      event.preventDefault();
+      stepToSection(-1);
     }
   });
+}
+
+function registerRulingGuides() {
+  window.addEventListener("resize", scheduleRulingGuides, { passive: true });
+  window.addEventListener("orientationchange", scheduleRulingGuides, { passive: true });
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      scheduleRulingGuides();
+    });
+  }
+
+  scheduleRulingGuides();
 }
 
 function initializeFromHash() {
@@ -231,6 +357,7 @@ function initializeFromHash() {
   requestAnimationFrame(() => {
     scrollToSection(initialSection, "auto");
     updateProgress();
+    scheduleRulingGuides();
   });
 }
 
@@ -240,6 +367,7 @@ function init() {
   registerProjects();
   registerDialog();
   registerScroller();
+  registerRulingGuides();
   initializeFromHash();
 }
 

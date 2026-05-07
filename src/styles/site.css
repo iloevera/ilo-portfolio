@@ -1,5 +1,17 @@
 :root {
   color-scheme: dark;
+  --grid-parallax-x: 0px;
+  --grid-parallax-y: 0px;
+  --rule-line-color: rgba(255, 255, 255, 0.1);
+  --rule-thickness: 0.5px;
+  --rule-opacity: 0.65;
+  --rule-x-content-start: 64px;
+  --rule-x-content-end: calc(100vw - 64px);
+  --rule-x-editorial: 70vw;
+  --rule-y-frame-top: 40px;
+  --rule-y-glance-top: 30vh;
+  --rule-y-nav-top: calc(100vh - 120px);
+  --rule-y-nav-bottom: calc(100vh - 16px);
 }
 
 html {
@@ -24,19 +36,58 @@ body::before {
     linear-gradient(rgba(132, 171, 223, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(132, 171, 223, 0.08) 1px, transparent 1px);
   background-size: clamp(3.75rem, 8vw, 6.5rem) clamp(3.75rem, 8vw, 6.5rem);
+  background-position: var(--grid-parallax-x) var(--grid-parallax-y);
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.6));
   opacity: 0.8;
+}
+
+.site-shell {
+  isolation: isolate;
+}
+
+.site-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--rule-opacity);
+  background-image:
+    linear-gradient(var(--rule-line-color), var(--rule-line-color)),
+    linear-gradient(var(--rule-line-color), var(--rule-line-color)),
+    linear-gradient(var(--rule-line-color), var(--rule-line-color)),
+    linear-gradient(var(--rule-line-color), var(--rule-line-color)),
+    linear-gradient(var(--rule-line-color), var(--rule-line-color)),
+    linear-gradient(var(--rule-line-color), var(--rule-line-color));
+  background-repeat: no-repeat;
+  background-size:
+    var(--rule-thickness) 100%,
+    var(--rule-thickness) 100%,
+    var(--rule-thickness) 100%,
+    100% var(--rule-thickness),
+    100% var(--rule-thickness),
+    100% var(--rule-thickness);
+  background-position:
+    var(--rule-x-content-start) 0,
+    var(--rule-x-content-end) 0,
+    var(--rule-x-editorial) 0,
+    0 var(--rule-y-frame-top),
+    0 var(--rule-y-glance-top),
+    0 var(--rule-y-nav-top);
 }
 
 .site-shell::after {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   background: linear-gradient(90deg, rgba(6, 12, 23, 0.86) 0%, transparent 18%, transparent 82%, rgba(6, 12, 23, 0.86) 100%);
 }
 
 #site-track {
+  position: relative;
+  z-index: 2;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
@@ -132,12 +183,26 @@ body::before {
 }
 
 @media (max-width: 1023px) {
+  :root {
+    --rule-opacity: 0.52;
+    --rule-y-frame-top: 32px;
+    --rule-y-nav-bottom: -100vh;
+  }
+
   .site-shell::after {
     background: linear-gradient(180deg, rgba(6, 12, 23, 0.8) 0%, transparent 20%, transparent 78%, rgba(6, 12, 23, 0.92) 100%);
   }
 }
 
 @media (max-width: 767px) {
+  :root {
+    --rule-opacity: 0.38;
+    --rule-thickness: 1px;
+    --rule-x-content-end: -100vw;
+    --rule-x-editorial: 52vw;
+    --rule-y-frame-top: 16px;
+  }
+
   .section-panel {
     padding-bottom: 11rem;
   }

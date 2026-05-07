@@ -51,7 +51,7 @@
   <div class="site-shell relative min-h-screen overflow-hidden">
     <main
       id="site-track"
-      class="relative flex h-[100dvh] overflow-x-auto overflow-y-hidden scroll-smooth pb-32 snap-x snap-mandatory lg:pb-36"
+      class="relative z-10 flex h-[100dvh] overflow-x-auto overflow-y-hidden scroll-smooth pb-32 snap-x snap-mandatory lg:pb-36"
       aria-label="Portfolio sections"
       tabindex="0"
     >
@@ -59,7 +59,7 @@
         <div class="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[1.35fr_0.9fr] lg:items-end">
           <div class="max-w-3xl">
             <p class="text-xs uppercase tracking-overline text-accentSoft">Media Portfolio</p>
-            <h1 class="mt-5 max-w-4xl font-display text-5xl leading-[0.92] text-white sm:text-6xl xl:text-7xl">
+            <h1 id="hero-headline" class="mt-5 max-w-4xl font-display text-5xl leading-[0.92] text-white sm:text-6xl xl:text-7xl">
               Composed visuals, quiet interfaces, and motion-led storytelling.
             </h1>
             <p class="mt-8 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <aside class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-glow backdrop-blur sm:p-8">
+          <aside id="at-a-glance-card" class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-glow backdrop-blur sm:p-8">
             <p class="text-xs uppercase tracking-overline text-accentSoft">At a glance</p>
             <dl class="mt-6 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
               <div>
@@ -177,10 +177,10 @@
       </section>
     </main>
 
-    <header class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-abyss/85 backdrop-blur-xl">
+    <header id="bottom-nav" class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-abyss/85 backdrop-blur-xl">
       <div class="mx-auto max-w-7xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 sm:px-6 lg:px-10">
         <div class="h-px w-full overflow-hidden rounded-full bg-white/10">
-          <div id="nav-progress" class="h-full origin-left scale-x-0 bg-gradient-to-r from-accent to-accentSoft transition-transform duration-300"></div>
+          <div id="nav-progress" class="h-full origin-left scale-x-0 bg-gradient-to-r from-accent to-accentSoft"></div>
         </div>
         <div class="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div class="flex items-center justify-between gap-4 lg:justify-start">
