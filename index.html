@@ -4,256 +4,231 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Iloe Vera | Portfolio</title>
-  <meta name="description" content="Media-oriented portfolio website with a horizontal side-scrolling layout." />
-
+  <meta
+    name="description"
+    content="A responsive, horizontal portfolio for Iloe Vera with editorial typography, project popups, and a dark blue grid aesthetic."
+  />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            ink: "#070d1a",
-            panel: "#0b152e",
-            panelSoft: "#122246",
-            line: "#25427a",
-            accent: "#66b2ff",
-            accentSoft: "#7ecbff"
+            abyss: "#07101f",
+            ink: "#0c1830",
+            panel: "#102240",
+            panelSoft: "#152d53",
+            line: "#284a7c",
+            mist: "#c9d7f0",
+            accent: "#77b7ff",
+            accentSoft: "#9fd4ff",
+            glow: "#16396a"
           },
           fontFamily: {
-            body: ["Plus Jakarta Sans", "sans-serif"],
-            display: ["Space Grotesk", "sans-serif"]
+            sans: ["Manrope", "sans-serif"],
+            display: ["Fraunces", "serif"]
           },
           boxShadow: {
-            glow: "0 14px 40px rgba(7, 13, 26, 0.45)",
-            card: "0 12px 30px rgba(0, 0, 0, 0.35)"
+            card: "0 24px 60px rgba(4, 10, 24, 0.35)",
+            glow: "0 20px 70px rgba(16, 34, 64, 0.45)"
+          },
+          letterSpacing: {
+            overline: "0.3em"
           }
         }
       }
     };
   </script>
-
-  <style>
-    :root {
-      color-scheme: dark;
-    }
-
-    html,
-    body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-      background: radial-gradient(circle at 20% 10%, #133168 0%, #0b152e 32%, #070d1a 100%);
-      /* Ensure touch-action doesn't block horizontal swipes */
-      touch-action: pan-x pan-y;
-    }
-
-    body {
-      font-family: "Plus Jakarta Sans", sans-serif;
-      color: #d9e8ff;
-    }
-
-    #h-scroll {
-      display: flex;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      overscroll-behavior-x: contain;
-      -webkit-overflow-scrolling: touch;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    /* Hide scrollbar for a cleaner minimalist look */
-    #h-scroll::-webkit-scrollbar {
-      display: none;
-    }
-    #h-scroll {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .panel {
-      flex: 0 0 100vw;
-      width: 100vw;
-      height: 100%;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
-    }
-
-    .nav-link[data-active="true"] {
-      color: #ffffff;
-      border-color: rgba(126, 203, 255, 0.7);
-      background: linear-gradient(135deg, rgba(102, 178, 255, 0.18), rgba(126, 203, 255, 0.06));
-    }
-  </style>
+  <link rel="stylesheet" href="./src/styles/site.css" />
 </head>
-<body>
-  <main id="h-scroll" class="pb-20">
-    <section id="home" class="panel relative flex items-center px-6 sm:px-12 lg:px-20">
-      <div class="absolute left-1/2 top-[20%] h-72 w-72 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"></div>
-      <div class="relative mx-auto max-w-3xl text-center sm:text-left">
-        <p class="mb-4 text-sm uppercase tracking-[0.28em] text-accentSoft">Creative Portfolio</p>
-        <h1 class="font-display text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
-          I craft visual stories through motion, composition, and digital experience.
-        </h1>
-        <p class="mt-6 max-w-2xl text-base text-slate-300 sm:text-lg">
-          A minimalist showcase built for clarity and impact. Scroll sideways to explore selected work, process, and ways to collaborate.
-        </p>
+<body class="bg-abyss font-sans text-mist antialiased">
+  <div class="site-shell relative min-h-screen overflow-hidden">
+    <main
+      id="site-track"
+      class="relative flex h-[100dvh] overflow-x-auto overflow-y-hidden scroll-smooth pb-32 snap-x snap-mandatory lg:pb-36"
+      aria-label="Portfolio sections"
+      tabindex="0"
+    >
+      <section id="home" data-section="home" class="section-panel flex w-screen shrink-0 snap-start items-center px-6 py-10 sm:px-10 lg:px-16">
+        <div class="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[1.35fr_0.9fr] lg:items-end">
+          <div class="max-w-3xl">
+            <p class="text-xs uppercase tracking-overline text-accentSoft">Media Portfolio</p>
+            <h1 class="mt-5 max-w-4xl font-display text-5xl leading-[0.92] text-white sm:text-6xl xl:text-7xl">
+              Composed visuals, quiet interfaces, and motion-led storytelling.
+            </h1>
+            <p class="mt-8 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+              Iloe Vera builds visual systems that feel editorial instead of ornamental. This portfolio moves sideways like a storyboard, guiding viewers through identity, interaction, and selected works.
+            </p>
+            <div class="mt-10 flex flex-wrap gap-4">
+              <a href="#projects" data-jump="projects" class="inline-flex items-center rounded-full border border-accent/40 bg-accent/10 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:border-accent hover:bg-accent/20 focus:outline-none focus:ring-2 focus:ring-accent/70">
+                Browse selected work
+              </a>
+              <a href="#contact" data-jump="contact" class="inline-flex items-center rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-slate-200 transition duration-300 hover:border-accent/70 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70">
+                Start a conversation
+              </a>
+            </div>
+          </div>
+
+          <aside class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-glow backdrop-blur sm:p-8">
+            <p class="text-xs uppercase tracking-overline text-accentSoft">At a glance</p>
+            <dl class="mt-6 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
+              <div>
+                <dt class="text-sm text-slate-400">Focus</dt>
+                <dd class="mt-2 font-display text-2xl text-white">Digital identity and motion systems</dd>
+              </div>
+              <div>
+                <dt class="text-sm text-slate-400">Approach</dt>
+                <dd class="mt-2 font-display text-2xl text-white">Minimal, editorial, technically precise</dd>
+              </div>
+              <div>
+                <dt class="text-sm text-slate-400">Formats</dt>
+                <dd class="mt-2 font-display text-2xl text-white">Campaigns, launches, installations</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section id="about" data-section="about" class="section-panel flex w-screen shrink-0 snap-start items-center px-6 py-10 sm:px-10 lg:px-16">
+        <div class="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+          <div class="space-y-5">
+            <p class="text-xs uppercase tracking-overline text-accentSoft">About</p>
+            <h2 class="font-display text-4xl leading-tight text-white sm:text-5xl">
+              Built for brands and institutions that need atmosphere without noise.
+            </h2>
+          </div>
+          <div class="grid gap-6 lg:grid-cols-2">
+            <article class="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-card backdrop-blur">
+              <h3 class="font-display text-2xl text-white">Profile</h3>
+              <p class="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
+                I work across interface direction, campaign systems, and media presentation. The goal is consistent: shape information so it feels deliberate, readable, and emotionally calibrated.
+              </p>
+            </article>
+            <article class="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-card backdrop-blur">
+              <h3 class="font-display text-2xl text-white">Method</h3>
+              <p class="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
+                Each project starts with pace and structure. From there, I build restrained color, type, motion, and interaction into a system that can survive production, revision, and scale.
+              </p>
+            </article>
+            <article class="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-card backdrop-blur lg:col-span-2">
+              <h3 class="font-display text-2xl text-white">Capabilities</h3>
+              <div class="mt-5 grid gap-4 text-sm text-slate-300 sm:grid-cols-2 sm:text-base">
+                <p>Creative direction for digital launches and media campaigns.</p>
+                <p>Interface concepting with responsive, production-aware execution.</p>
+                <p>Motion-led narratives translated into coherent web experiences.</p>
+                <p>Cross-functional collaboration from concept deck to shipped asset.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" data-section="projects" class="section-panel flex w-screen shrink-0 snap-start items-center px-6 py-10 sm:px-10 lg:px-16">
+        <div class="mx-auto w-full max-w-7xl">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-overline text-accentSoft">Projects</p>
+              <h2 class="mt-3 font-display text-4xl text-white sm:text-5xl">Selected work, framed as dossiers.</h2>
+            </div>
+            <p class="max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
+              Each card opens a lightweight project popup with the narrative, deliverables, and result the piece was designed to hold.
+            </p>
+          </div>
+
+          <div id="projects-grid" class="mt-10 grid gap-5 md:grid-cols-2 2xl:grid-cols-4"></div>
+        </div>
+      </section>
+
+      <section id="contact" data-section="contact" class="section-panel flex w-screen shrink-0 snap-start items-center px-6 py-10 sm:px-10 lg:px-16">
+        <div class="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[1fr_0.9fr]">
+          <div>
+            <p class="text-xs uppercase tracking-overline text-accentSoft">Contact</p>
+            <h2 class="mt-4 max-w-2xl font-display text-4xl leading-tight text-white sm:text-5xl">
+              If the brief needs calm structure and stronger visual rhythm, let us talk.
+            </h2>
+            <p class="mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
+              Available for brand launches, digital campaigns, exhibition interfaces, and visual systems that need to feel intentional from the first frame to the final interaction.
+            </p>
+          </div>
+
+          <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-glow backdrop-blur sm:p-8">
+            <div class="grid gap-4">
+              <a href="mailto:hello@iloevera.studio" class="contact-link rounded-2xl border border-white/10 px-5 py-4 text-white transition duration-300 hover:border-accent/70 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70">
+                hello@iloevera.studio
+              </a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" class="contact-link rounded-2xl border border-white/10 px-5 py-4 text-white transition duration-300 hover:border-accent/70 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70">
+                LinkedIn
+              </a>
+              <a href="https://www.behance.net" target="_blank" rel="noreferrer" class="contact-link rounded-2xl border border-white/10 px-5 py-4 text-white transition duration-300 hover:border-accent/70 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70">
+                Behance
+              </a>
+            </div>
+            <p class="mt-6 text-sm leading-6 text-slate-400">
+              For now the contact section stays intentionally light. If you add a backend later, this block can become a form without changing the surrounding layout.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <header class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-abyss/85 backdrop-blur-xl">
+      <div class="mx-auto max-w-7xl px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 sm:px-6 lg:px-10">
+        <div class="h-px w-full overflow-hidden rounded-full bg-white/10">
+          <div id="nav-progress" class="h-full origin-left scale-x-0 bg-gradient-to-r from-accent to-accentSoft transition-transform duration-300"></div>
+        </div>
+        <div class="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex items-center justify-between gap-4 lg:justify-start">
+            <div>
+              <p class="text-[0.65rem] uppercase tracking-overline text-accentSoft">Iloe Vera</p>
+              <p id="section-status" class="mt-1 text-sm text-slate-300">01 / 04</p>
+            </div>
+            <p class="hidden text-sm text-slate-400 sm:block">Horizontal portfolio</p>
+          </div>
+          <nav aria-label="Section navigation" class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <a class="nav-link" href="#home" data-section-link="home">Home</a>
+            <a class="nav-link" href="#about" data-section-link="about">About</a>
+            <a class="nav-link" href="#projects" data-section-link="projects">Projects</a>
+            <a class="nav-link" href="#contact" data-section-link="contact">Contact</a>
+          </nav>
+        </div>
       </div>
-    </section>
+    </header>
+  </div>
 
-    <section id="about" class="panel flex items-center px-6 sm:px-12 lg:px-20">
-      <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-8 lg:grid-cols-5">
-        <div class="lg:col-span-3">
-          <h2 class="font-display text-3xl font-semibold text-white sm:text-4xl">About</h2>
-          <p class="mt-5 text-slate-300 sm:text-lg">
-            I am a media-oriented designer and developer focused on turning complex ideas into calm, high-performing interfaces.
-            My process combines editorial thinking, visual rhythm, and technical precision.
-          </p>
-          <p class="mt-4 text-slate-400">
-            Core strengths include digital storytelling, interface prototyping, and production-ready front-end implementation.
-          </p>
+  <dialog id="project-dialog" class="project-dialog w-full max-w-3xl rounded-[2rem] border border-white/10 bg-ink/95 p-0 text-mist shadow-glow backdrop:bg-abyss/80 backdrop:backdrop-blur-sm">
+    <div class="flex items-center justify-between border-b border-white/10 px-6 py-5 sm:px-8">
+      <div>
+        <p id="dialog-eyebrow" class="text-xs uppercase tracking-overline text-accentSoft"></p>
+        <h3 id="dialog-title" class="mt-2 font-display text-3xl text-white"></h3>
+      </div>
+      <button id="dialog-close" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-slate-200 transition hover:border-accent/70 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70" aria-label="Close project details">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="grid gap-8 px-6 py-6 sm:px-8 sm:py-8 lg:grid-cols-[1.2fr_0.8fr]">
+      <div>
+        <p id="dialog-summary" class="text-base leading-7 text-slate-200"></p>
+        <p id="dialog-description" class="mt-5 text-sm leading-7 text-slate-300 sm:text-base"></p>
+      </div>
+      <div class="grid gap-6">
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.18em] text-accentSoft">Deliverables</h4>
+          <ul id="dialog-deliverables" class="mt-4 space-y-3 text-sm text-slate-300"></ul>
         </div>
-        <div class="rounded-2xl border border-line/70 bg-panel/70 p-6 shadow-glow lg:col-span-2">
-          <h3 class="font-display text-xl text-white">Capabilities</h3>
-          <ul class="mt-4 space-y-3 text-slate-300">
-            <li>Art direction for web and social campaigns</li>
-            <li>Interactive layouts and performance-minded UI builds</li>
-            <li>Motion-aware systems and refined content hierarchy</li>
-            <li>Cross-functional collaboration from concept to launch</li>
-          </ul>
+        <div>
+          <h4 class="text-sm font-semibold uppercase tracking-[0.18em] text-accentSoft">Outcome</h4>
+          <p id="dialog-outcome" class="mt-4 text-sm leading-7 text-slate-300"></p>
         </div>
       </div>
-    </section>
+    </div>
+  </dialog>
 
-    <section id="projects" class="panel flex items-center px-6 sm:px-12 lg:px-20">
-      <div class="mx-auto w-full max-w-7xl">
-        <div class="mb-8">
-          <h2 class="font-display text-3xl font-semibold text-white sm:text-4xl">Projects</h2>
-          <p class="mt-3 max-w-2xl text-slate-300">Selected projects with a focus on visual identity, interaction quality, and measurable outcomes.</p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <article class="group rounded-3xl border border-line/70 bg-panel/80 p-6 shadow-card transition duration-300 ease-out hover:-translate-y-1.5 hover:border-accent/70 hover:bg-panelSoft/90 focus-within:-translate-y-1.5">
-            <p class="text-xs uppercase tracking-[0.22em] text-accentSoft">Brand Film</p>
-            <h3 class="mt-3 font-display text-2xl text-white">Kinetic Product Narrative</h3>
-            <p class="mt-4 text-slate-300">A cinematic launch sequence blending editorial pacing with interactive product reveals for a global campaign.</p>
-            <a href="#contact" class="mt-8 inline-block rounded-full border border-line px-4 py-2 text-sm text-slate-200 transition hover:border-accent hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70">View Case Study</a>
-          </article>
-
-          <article class="group rounded-3xl border border-line/70 bg-panel/80 p-6 shadow-card transition duration-300 ease-out hover:-translate-y-1.5 hover:border-accent/70 hover:bg-panelSoft/90 focus-within:-translate-y-1.5">
-            <p class="text-xs uppercase tracking-[0.22em] text-accentSoft">Interactive Web</p>
-            <h3 class="mt-3 font-display text-2xl text-white">Museum Stories Platform</h3>
-            <p class="mt-4 text-slate-300">An immersive archive experience designed for horizontal exploration, balancing discovery with rapid content access.</p>
-            <a href="#contact" class="mt-8 inline-block rounded-full border border-line px-4 py-2 text-sm text-slate-200 transition hover:border-accent hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70">View Case Study</a>
-          </article>
-
-          <article class="group rounded-3xl border border-line/70 bg-panel/80 p-6 shadow-card transition duration-300 ease-out hover:-translate-y-1.5 hover:border-accent/70 hover:bg-panelSoft/90 focus-within:-translate-y-1.5">
-            <p class="text-xs uppercase tracking-[0.22em] text-accentSoft">Experience Design</p>
-            <h3 class="mt-3 font-display text-2xl text-white">Live Event Visual System</h3>
-            <p class="mt-4 text-slate-300">A unified motion and on-site content framework that kept a multi-day event coherent across screens and formats.</p>
-            <a href="#contact" class="mt-8 inline-block rounded-full border border-line px-4 py-2 text-sm text-slate-200 transition hover:border-accent hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70">View Case Study</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact" class="panel flex items-center px-6 sm:px-12 lg:px-20">
-      <div class="mx-auto w-full max-w-3xl rounded-3xl border border-line/70 bg-panel/70 p-8 shadow-glow sm:p-10">
-        <h2 class="font-display text-3xl font-semibold text-white sm:text-4xl">Contact</h2>
-        <p class="mt-4 text-slate-300 sm:text-lg">Interested in a collaboration or campaign? Let us build something clear, memorable, and technically sharp.</p>
-        <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <a href="mailto:hello@iloevera.com" class="rounded-xl border border-line px-5 py-4 text-slate-100 transition hover:border-accent hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70">hello@iloevera.com</a>
-          <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" class="rounded-xl border border-line px-5 py-4 text-slate-100 transition hover:border-accent hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70">LinkedIn</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <header class="fixed bottom-0 left-0 right-0 z-20 border-t border-line/70 bg-ink/85 backdrop-blur-md">
-    <nav aria-label="Section navigation" class="mx-auto flex h-20 max-w-6xl items-center justify-center gap-2 px-4 sm:gap-3">
-      <a class="nav-link rounded-full border border-line/80 px-4 py-2 text-sm text-slate-300 transition hover:border-accent/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70" href="#home" data-section="home">Home</a>
-      <a class="nav-link rounded-full border border-line/80 px-4 py-2 text-sm text-slate-300 transition hover:border-accent/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70" href="#about" data-section="about">About</a>
-      <a class="nav-link rounded-full border border-line/80 px-4 py-2 text-sm text-slate-300 transition hover:border-accent/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70" href="#projects" data-section="projects">Projects</a>
-      <a class="nav-link rounded-full border border-line/80 px-4 py-2 text-sm text-slate-300 transition hover:border-accent/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/70" href="#contact" data-section="contact">Contact</a>
-    </nav>
-  </header>
-
-  <script>
-    const scroller = document.getElementById("h-scroll");
-    const sections = [...document.querySelectorAll("section.panel")];
-    const links = [...document.querySelectorAll(".nav-link")];
-
-    // Handle vertical wheel to horizontal scroll conversion
-    scroller.addEventListener("wheel", (evt) => {
-      // If the scroll is mostly vertical, convert it to horizontal
-      if (Math.abs(evt.deltaY) > Math.abs(evt.deltaX)) {
-        // Use scrollTo for more reliable snapping trigger
-        scroller.scrollBy({
-          left: evt.deltaY,
-          behavior: "auto"
-        });
-        evt.preventDefault();
-      }
-    }, { passive: false });
-
-    const setActive = (id) => {
-      links.forEach((link) => {
-        const isActive = link.dataset.section === id;
-        link.dataset.active = isActive;
-        link.setAttribute("aria-current", isActive ? "page" : "false");
-      });
-    };
-
-    links.forEach((link) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        const id = link.getAttribute("href").slice(1);
-        const target = document.getElementById(id);
-        if (!target) return;
-
-        target.scrollIntoView({
-          behavior: "smooth",
-          inline: "start",
-          block: "nearest"
-        });
-
-        history.replaceState(null, "", `#${id}`);
-      });
-    });
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-            setActive(entry.target.id);
-          }
-        });
-      },
-      {
-        root: scroller,
-        threshold: [0.6, 0.8]
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    const initial = window.location.hash ? window.location.hash.slice(1) : "home";
-    if (document.getElementById(initial)) {
-      setActive(initial);
-      document.getElementById(initial).scrollIntoView({
-        behavior: "auto",
-        inline: "start",
-        block: "nearest"
-      });
-    } else {
-      setActive("home");
-    }
-  </script>
+  <script type="module" src="./src/js/main.js"></script>
 </body>
 </html>
