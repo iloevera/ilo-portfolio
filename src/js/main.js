@@ -1,12 +1,46 @@
 import projects from "../data/projects.js";
 
-const sections = ["home", "about", "projects", "contact"];
+const sections = ["home", "about", "projects", "films", "promo-videos", "event-recaps", "photoshoots", "contact"];
+
+const categorySections = [
+  {
+    id: "films",
+    label: "Films",
+    description: "Short films and narrative studies.",
+    summary: "Script-first work with a strong narrative and editorial rhythm.",
+    gridId: "films-grid"
+  },
+  {
+    id: "promo-videos",
+    label: "Promo Videos",
+    description: "Campaign and institutional videos.",
+    summary: "Promotional work built for programmes, launches, and outreach.",
+    gridId: "promo-videos-grid"
+  },
+  {
+    id: "event-recaps",
+    label: "Event Recaps",
+    description: "Live moments cut into memory.",
+    summary: "Coverage shaped around atmosphere, pacing, and crowd energy.",
+    gridId: "event-recaps-grid"
+  },
+  {
+    id: "photoshoots",
+    label: "Photoshoots",
+    description: "Portraits and still-image studies.",
+    summary: "Placeholder dossiers structured for studio, location, and editorial stills.",
+    gridId: "photoshoots-grid"
+  }
+];
 
 const scroller = document.querySelector("#site-track");
-const projectsGrid = document.querySelector("#projects-grid");
+const overviewGrid = document.querySelector("#projects-overview-grid");
 const navLinks = Array.from(document.querySelectorAll("[data-section-link]"));
-const jumpLinks = Array.from(document.querySelectorAll("[data-jump]"));
-const progressBar = document.querySelector("#nav-progress");
+const projectGrids = Object.fromEntries(
+  categorySections.map((category) => [category.id, document.querySelector(`#${category.gridId}`)])
+);
+const sectionNavGrid = document.querySelector("#section-nav-grid");
+const sectionNavShell = document.querySelector(".section-nav-shell");
 const sectionStatus = document.querySelector("#section-status");
 const dialog = document.querySelector("#project-dialog");
 const dialogClose = document.querySelector("#dialog-close");
@@ -37,16 +71,72 @@ function stepToSection(direction) {
   scrollToSection(sections[targetSectionIndex]);
 }
 
-function renderProjects() {
-  projectsGrid.innerHTML = projects
+function getAspectClass(aspect) {
+  return `thumb-${String(aspect).replace(":", "-")}`;
+}
+
+function getTileClass(tile) {
+  const safeTile = /^[1-4]x[1-4]$/.test(String(tile)) ? tile : "2x2";
+  return `tile-${safeTile}`;
+}
+
+function renderOverview() {
+  overviewGrid.innerHTML = categorySections
+    .map((category) => {
+      const categoryProjects = projects.filter((project) => project.category === category.id);
+      const featuredProject = categoryProjects[0];
+      const mediaClass = featuredProject ? getAspectClass(featuredProject.thumbnail.aspect) : "thumb-16-9";
+      const theme = featuredProject?.thumbnail.theme ?? "ink";
+
+      return `
+        <article class="category-card rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-card backdrop-blur">
+          <div class="category-card__media ${mediaClass}" data-theme="${theme}">
+            <span class="category-card__label">${featuredProject?.thumbnail.label ?? category.label}</span>
+          </div>
+          <div class="mt-6 flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-overline text-accentSoft">${category.label}</p>
+              <h3 class="mt-3 font-display text-[1.9rem] leading-tight text-white">${category.description}</h3>
+            </div>
+            <span class="category-card__count">${String(categoryProjects.length).padStart(2, "0")}</span>
+          </div>
+          <p class="mt-4 text-sm leading-7 text-slate-300">${category.summary}</p>
+          <div class="mt-8 flex items-center justify-between gap-4">
+            <span class="text-sm text-slate-400">${String(categoryProjects.length).padStart(2, "0")} dossiers</span>
+            <a href="#${category.id}" data-jump="${category.id}" class="inline-flex items-center rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-white transition duration-300 hover:border-accent/70 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70">
+              Open section
+            </a>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderProjectCards(categoryId) {
+  const grid = projectGrids[categoryId];
+  if (!grid) {
+    return;
+  }
+
+  const categoryProjects = projects.filter((project) => project.category === categoryId);
+  grid.innerHTML = categoryProjects
     .map(
       (project, index) => `
-        <article class="project-card rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-card backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-white/[0.07] focus-within:-translate-y-1">
-          <p class="text-xs uppercase tracking-overline text-accentSoft">${project.eyebrow}</p>
-          <h3 class="mt-3 font-display text-[1.9rem] leading-tight text-white">${project.title}</h3>
-          <p class="mt-4 text-sm leading-7 text-slate-300">${project.summary}</p>
-          <div class="mt-8 flex items-center justify-between gap-4">
-            <span class="text-sm text-slate-400">0${index + 1}</span>
+        <article class="project-card project-card--${project.thumbnail.variant} ${getTileClass(project.thumbnail.tile)} rounded-[1.4rem] border border-white/10 bg-white/5 p-4 shadow-card backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-white/[0.07] focus-within:-translate-y-1">
+          <div class="project-card__media ${getAspectClass(project.thumbnail.aspect)}" data-theme="${project.thumbnail.theme}">
+            <span class="project-card__label">${project.thumbnail.label}</span>
+          </div>
+          <div class="mt-4 flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-overline text-accentSoft">${project.eyebrow}</p>
+              <h3 class="mt-2 font-display text-[1.35rem] leading-tight text-white">${project.title}</h3>
+            </div>
+            <span class="text-sm text-slate-400">${String(index + 1).padStart(2, "0")}</span>
+          </div>
+          <p class="project-card__summary mt-3 text-sm leading-6 text-slate-300">${project.summary}</p>
+          <div class="mt-4 flex items-center justify-between gap-3">
+            <span class="text-sm text-slate-400">${project.thumbnail.aspect}</span>
             <button type="button" class="inline-flex items-center rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-white transition duration-300 hover:border-accent/70 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent/70" data-project-trigger="${project.id}">
               Open dossier
             </button>
@@ -55,6 +145,13 @@ function renderProjects() {
       `
     )
     .join("");
+}
+
+function renderProjects() {
+  renderOverview();
+  categorySections.forEach((category) => {
+    renderProjectCards(category.id);
+  });
 }
 
 function fillDialog(project) {
@@ -110,7 +207,8 @@ function scrollToSection(sectionId, behavior = "smooth") {
 function updateProgress() {
   const maxScroll = scroller.scrollWidth - scroller.clientWidth;
   const progress = maxScroll <= 0 ? 0 : scroller.scrollLeft / maxScroll;
-  progressBar.style.transform = `scaleX(${Math.min(Math.max(progress, 0), 1)})`;
+  sectionNavGrid?.style.setProperty("--scroll-progress", progress.toFixed(4));
+  sectionNavShell?.style.setProperty("--scroll-progress", progress.toFixed(4));
 }
 
 function setActiveSection(sectionId) {
@@ -121,10 +219,13 @@ function setActiveSection(sectionId) {
   }
   const displayIndex = activeIndex >= 0 ? activeIndex + 1 : 1;
   sectionStatus.textContent = `${String(displayIndex).padStart(2, "0")} / ${String(sections.length).padStart(2, "0")}`;
+  sectionNavGrid?.style.setProperty("--active-index", String(Math.max(activeIndex, 0)));
 
-  navLinks.forEach((link) => {
+  navLinks.forEach((link, index) => {
     const isActive = link.dataset.sectionLink === sectionId;
+    const isCompleted = activeIndex >= 0 && index < activeIndex;
     link.dataset.active = isActive;
+    link.dataset.completed = String(isCompleted);
     if (isActive) {
       link.setAttribute("aria-current", "page");
     } else {
@@ -206,24 +307,27 @@ function updateRulingGuides() {
 }
 
 function registerNavigation() {
-  [...navLinks, ...jumpLinks].forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const targetId = link.getAttribute("href")?.slice(1);
-      if (!targetId) {
-        return;
-      }
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-section-link], a[data-jump]");
+    if (!(link instanceof HTMLAnchorElement)) {
+      return;
+    }
 
-      event.preventDefault();
-      wheelAccumulator = 0;
-      targetSectionIndex = clampIndex(sections.indexOf(targetId));
-      scrollToSection(targetId);
-      scheduleRulingGuides();
-    });
+    const targetId = link.getAttribute("href")?.slice(1);
+    if (!targetId || !sections.includes(targetId)) {
+      return;
+    }
+
+    event.preventDefault();
+    wheelAccumulator = 0;
+    targetSectionIndex = clampIndex(sections.indexOf(targetId));
+    scrollToSection(targetId);
+    scheduleRulingGuides();
   });
 }
 
 function registerProjects() {
-  projectsGrid.addEventListener("click", (event) => {
+  document.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-project-trigger]");
     if (!(trigger instanceof HTMLButtonElement)) {
       return;
